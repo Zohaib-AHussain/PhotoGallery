@@ -1,5 +1,7 @@
 package zohaibhussain.com.photogallery;
 
+import android.net.Uri;
+
 /**
  * Created by zohaibhussain on 2016-02-04.
  */
@@ -8,6 +10,7 @@ public class GalleryItem {
     private String mCaption;
     private String mID;
     private String mUrl;
+    private Uri mUri;
 
     public String getCaption() {
         return mCaption;
@@ -31,6 +34,14 @@ public class GalleryItem {
 
     public void setUrl(String url) {
         mUrl = url;
+    }
+
+    public Uri getUri() {
+        return mUri;
+    }
+
+    public void setUri(Uri uri) {
+        mUri = uri;
     }
 
 }
