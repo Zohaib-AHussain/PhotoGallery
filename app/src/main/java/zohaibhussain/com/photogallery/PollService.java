@@ -24,8 +24,8 @@ public class PollService extends IntentService {
 
     private static final String TAG = "POLL_SERVICE";
 
-    public PollService(String name) {
-        super(name);
+    public PollService() {
+        super(TAG);
     }
 
     public static Intent newIntent(Context context){
@@ -47,28 +47,30 @@ public class PollService extends IntentService {
         else
             items = new FlickrFetchr().searchPhotos(query);
 
-        if (items.size() > 0)
+        if (items.size() == 0)
             return;
 
         String resultID = items.get(0).getID();
         if (resultID.equals(lastResultID))
             Log.i(TAG, "Got an old result: " + resultID);
-        else
+        else {
             Log.i(TAG, "Got a new result: " + resultID);
 
-        Resources resources = getResources();
-        Intent i =PhotoGalleryActivity.newIntent(this);
-        PendingIntent pi = PendingIntent.getActivity(this, 0, i, 0);
-        Notification notification = new NotificationCompat.Builder(this)
-                .setTicker(resources.getString(R.string.new_pictures_title))
-                .setSmallIcon(android.R.drawable.ic_menu_report_image)
-                .setContentTitle(resources.getString(R.string.new_pictures_title))
-                .setContentText(resources.getString(R.string.new_pictures_text))
-                .setAutoCancel(true)
-                .build();
+            Resources resources = getResources();
+            Intent i = PhotoGalleryActivity.newIntent(this);
+            PendingIntent pi = PendingIntent.getActivity(this, 0, i, 0);
+            Notification notification = new NotificationCompat.Builder(this)
+                    .setTicker(resources.getString(R.string.new_pictures_title))
+                    .setSmallIcon(android.R.drawable.ic_menu_report_image)
+                    .setContentTitle(resources.getString(R.string.new_pictures_title))
+                    .setContentText(resources.getString(R.string.new_pictures_text))
+                    .setContentIntent(pi)
+                    .setAutoCancel(true)
+                    .build();
 
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(0, notification);
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            notificationManager.notify(0, notification);
+        }
         QueryPreferences.setLastResultID(this, resultID);
     }
 
