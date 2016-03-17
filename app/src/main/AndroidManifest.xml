@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="zohaibhussain.com.photogallery"
     xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <permission
+        android:name="zohaibhussain.com.photogallery.permission.custom"
+        android:protectionLevel="signature"/>
+
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="zohaibhussain.com.photogallery.permission.custom"/>
 
     <application
         android:allowBackup="true"
@@ -25,6 +31,14 @@
         <receiver android:name=".StartupReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+        
+        <receiver
+            android:name=".NotificationReceiver"
+            android:exported="false">
+            <intent-filter android:priority="-999">
+                <action android:name="zohaibhussain.com.photogallery.permission.custom"/>
             </intent-filter>
         </receiver>
 
