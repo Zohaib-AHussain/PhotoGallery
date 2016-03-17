@@ -1,5 +1,6 @@
 package zohaibhussain.com.photogallery;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.IntentService;
 import android.app.Notification;
@@ -21,8 +22,11 @@ import java.util.List;
 public class PollService extends IntentService {
 
     private static final long POLL_INTERVAL = AlarmManager.INTERVAL_FIFTEEN_MINUTES; //60 seconds
-
     private static final String TAG = "POLL_SERVICE";
+    public static final String ACTION_SHOW_NOTIFICATION = "zohaibhussain.com.photogallery.show_notification";
+    public static final String CUSTOM_PERMISSION = "zohaibhussain.com.photogallery.permission.custom";
+    public static final String REQUEST_CODE = "REQUEST_CODE";
+    public static final String NOTIFICATION = "NOTIFICATION";
 
     public PollService() {
         super(TAG);
@@ -68,11 +72,23 @@ public class PollService extends IntentService {
                     .setAutoCancel(true)
                     .build();
 
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+            /*NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
             notificationManager.notify(0, notification);
+
+            sendBroadcast(new Intent(ACTION_SHOW_NOTIFICATION), CUSTOM_PERMISSION);*/
+
+            showBackgroundNotification(0, notification);
         }
         QueryPreferences.setLastResultID(this, resultID);
     }
+
+    private void showBackgroundNotification(int requestCode, Notification notification){
+        Intent i = new Intent(ACTION_SHOW_NOTIFICATION);
+        i.putExtra(REQUEST_CODE, requestCode);
+        i.putExtra(NOTIFICATION, notification);
+        sendOrderedBroadcast(i,     CUSTOM_PERMISSION, null, null, Activity.RESULT_OK, null, null);
+    }
+
 
     private boolean isNetworkAvailableAndConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE);
@@ -101,6 +117,7 @@ public class PollService extends IntentService {
         PendingIntent pi = PendingIntent.getService(context, 0, i, PendingIntent.FLAG_NO_CREATE);
         return pi != null;
     }
+
 
 
 }
